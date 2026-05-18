@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Global Logistics Management System</h1>
+
+        <p class="lead">
+            Enterprise logistics platform for managing clients, freight contracts,
+            service requests, and international logistics operations.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Client Management</h4>
+
+                    <p class="card-text">
+                        Manage logistics clients, regional operations, and contact information.
+                    </p>
+
+                    <a asp-controller="Clients" asp-action="Index"
+                       class="btn btn-primary">
+                        Open Module
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Contract Management</h4>
+
+                    <p class="card-text">
+                        Create freight contracts, manage agreement documents, and monitor contract status.
+                    </p>
+
+                    <a asp-controller="Contracts" asp-action="Index"
+                       class="btn btn-primary">
+                        Open Module
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Service Requests</h4>
+
+                    <p class="card-text">
+                        Process logistics service requests and monitor international service costs.
+                    </p>
+
+                    <a asp-controller="ServiceRequests" asp-action="Index"
+                       class="btn btn-primary">
+                        Open Module
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

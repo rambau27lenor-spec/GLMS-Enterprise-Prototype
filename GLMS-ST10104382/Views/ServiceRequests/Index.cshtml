@@ -1,0 +1,37 @@
+﻿@model IEnumerable<GLMS_ST10104382.Models.ServiceRequest>
+
+@{
+    ViewData["Title"] = "Service Requests";
+}
+
+<h1>Service Requests</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add Service Request</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Contract ID</th>
+            <th>Description</th>
+            <th>Cost USD</th>
+            <th>Cost ZAR</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Contract?.Client?.Name</td>
+                <td>@item.ContractId</td>
+                <td>@item.Description</td>
+                <td>$@item.Cost</td>
+                <td>R @item.ConvertedCostZar</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
