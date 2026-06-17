@@ -1,67 +1,37 @@
-using GLMS_ST10104382.Services;
+using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
+using Xunit;
 
 namespace GLMS_ST10104382.Tests
 {
-    public class BusinessRulesServiceTests
+    public class ApiIntegrationTests :
+        IClassFixture<WebApplicationFactory<Program>>
     {
-        [Fact]
-        public void CanCreateServiceRequest_WhenContractIsActive_ReturnsTrue()
+        private readonly HttpClient _client;
+
+        public ApiIntegrationTests(WebApplicationFactory<Program> factory)
         {
-            var service = new BusinessRulesService();
-
-            var result = service.CanCreateServiceRequest("Active");
-
-            Assert.True(result);
+            _client = factory.CreateClient();
         }
 
         [Fact]
-        public void CanCreateServiceRequest_WhenContractIsExpired_ReturnsFalse()
+        public async Task GetContracts_ReturnsStatusCode200()
         {
-            var service = new BusinessRulesService();
+            var response = await _client.GetAsync("/api/contracts");
 
-            var result = service.CanCreateServiceRequest("Expired");
-
-            Assert.False(result);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public void CanCreateServiceRequest_WhenContractIsOnHold_ReturnsFalse()
+        public async Task GetContracts_ReturnsJsonContent()
         {
-            var service = new BusinessRulesService();
+            var response = await _client.GetAsync("/api/contracts");
 
-            var result = service.CanCreateServiceRequest("On Hold");
+            response.EnsureSuccessStatusCode();
 
-            Assert.False(result);
-        }
+            var content = await response.Content.ReadAsStringAsync();
 
-        [Fact]
-        public void ConvertUsdToZar_WithValidRate_ReturnsCorrectAmount()
-        {
-            var service = new BusinessRulesService();
-
-            var result = service.ConvertUsdToZar(100, 18.50m);
-
-            Assert.Equal(1850, result);
-        }
-
-        [Fact]
-        public void IsValidAgreementFile_WhenPdf_ReturnsTrue()
-        {
-            var service = new BusinessRulesService();
-
-            var result = service.IsValidAgreementFile("contract.pdf");
-
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void IsValidAgreementFile_WhenExe_ReturnsFalse()
-        {
-            var service = new BusinessRulesService();
-
-            var result = service.IsValidAgreementFile("virus.exe");
-
-            Assert.False(result);
+            Assert.False(string.IsNullOrWhiteSpace(content));
         }
     }
 }

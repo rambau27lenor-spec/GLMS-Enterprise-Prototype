@@ -1,5 +1,6 @@
 ﻿using GLMS_ST10104382.Data;
 using GLMS_ST10104382.Models;
+using GLMS_ST10104382.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,33 +11,34 @@ namespace GLMS_ST10104382.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
-
-        public ContractsController(ApplicationDbContext context, IWebHostEnvironment environment)
+        private readonly ContractApiService _apiService;
+        public ContractsController(
+    ApplicationDbContext context,
+    IWebHostEnvironment environment,
+    ContractApiService apiService)
         {
             _context = context;
             _environment = environment;
+            _apiService = apiService;
         }
-
         public async Task<IActionResult> Index(string? status, DateTime? startDate, DateTime? endDate)
         {
-            var contracts = _context.Contracts
-                .Include(c => c.Client)
-                .AsQueryable();
+            var contracts = await _apiService.GetContractsAsync();
 
             if (!string.IsNullOrEmpty(status))
-                contracts = contracts.Where(c => c.Status == status);
+                contracts = contracts.Where(c => c.Status == status).ToList();
 
             if (startDate.HasValue)
-                contracts = contracts.Where(c => c.StartDate >= startDate.Value);
+                contracts = contracts.Where(c => c.StartDate >= startDate.Value).ToList();
 
             if (endDate.HasValue)
-                contracts = contracts.Where(c => c.EndDate <= endDate.Value);
+                contracts = contracts.Where(c => c.EndDate <= endDate.Value).ToList();
 
             ViewBag.Status = status;
             ViewBag.StartDate = startDate?.ToString("yyyy-MM-dd");
             ViewBag.EndDate = endDate?.ToString("yyyy-MM-dd");
 
-            return View(await contracts.ToListAsync());
+            return View(contracts);
         }
 
         public IActionResult Create()

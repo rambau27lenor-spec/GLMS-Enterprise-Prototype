@@ -53,7 +53,24 @@
                 <td>@item.Client?.Name</td>
                 <td>@item.StartDate.ToShortDateString()</td>
                 <td>@item.EndDate.ToShortDateString()</td>
-                <td>@item.Status</td>
+                <td>
+                    @if (item.Status == "Active")
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else if (item.Status == "Expired")
+                    {
+                        <span class="badge bg-danger">Expired</span>
+                    }
+                    else if (item.Status == "On Hold")
+                    {
+                        <span class="badge bg-warning text-dark">On Hold</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Draft</span>
+                    }
+                </td>
                 <td>@item.ServiceLevel</td>
                 <td>
                     @if (!string.IsNullOrEmpty(item.SignedAgreementPath))

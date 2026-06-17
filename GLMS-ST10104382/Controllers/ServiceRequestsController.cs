@@ -3,18 +3,20 @@ using GLMS_ST10104382.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using GLMS_ST10104382.Services;
 
 namespace GLMS_ST10104382.Controllers
 {
     public class ServiceRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly CurrencyService _currencyService;
 
-        public ServiceRequestsController(ApplicationDbContext context)
+        public ServiceRequestsController(ApplicationDbContext context, CurrencyService currencyService)
         {
             _context = context;
+            _currencyService = currencyService;
         }
-
         public async Task<IActionResult> Index()
         {
             var requests = _context.ServiceRequests
@@ -45,7 +47,8 @@ namespace GLMS_ST10104382.Controllers
                 ModelState.AddModelError("ContractId", "Service requests can only be created for active or draft contracts.");
             }
 
-            serviceRequest.ConvertedCostZar = serviceRequest.Cost * 18.50m;
+            var rate = await _currencyService.GetUsdToZarRateAsync();
+            serviceRequest.ConvertedCostZar = _currencyService.ConvertUsdToZar(serviceRequest.Cost, rate); 
 
             if (ModelState.IsValid)
             {
